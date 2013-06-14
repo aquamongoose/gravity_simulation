@@ -4,7 +4,8 @@ var WIDTH = 1200, HEIGHT = 600;
 var planets = [];
 var stopbutton, keep_running;
 var G = 20;
-var scale = 1;
+var step = 10000;
+var MINDIST = 10;
 
 function Planet(x, y, dy, dx, m) {
     this.x = x;
@@ -15,19 +16,20 @@ function Planet(x, y, dy, dx, m) {
     this.m = m;
     this.draw = function() {
         context.beginPath();
-        context.arc(this.x/scale, this.y/scale, this.r/scale, 0, 2*Math.PI, false);
+        context.arc(this.x, this.y, this.r, 0, 2*Math.PI, false);
         context.closePath();
         context.fill();
     }
     this.move = function() {
-        this.x += this.dx;
-        this.y += this.dy;
+        this.x += this.dx/STEP;
+        this.y += this.dy/STEP;
     }
     this.addGravityFrom = function(that) {
         var dist = Math.sqrt(Math.pow(that.x-this.x, 2) + Math.pow(that.y-this.y, 2));
+        if (dist < MINDIST) return;
         var acc = G*that.m/Math.pow(dist, 2);
-        var cx = acc*Math.abs(that.x-this.x)/dist;
-        var cy = acc*Math.abs(that.y-this.y)/dist;
+        var cx = acc*Math.pow((that.x-this.x)/dist, 2);
+        var cy = acc*Math.pow((that.y-this.y)/dist, 2);
 
         if (that.x < this.x)
             this.dx -= cx;
@@ -50,31 +52,10 @@ function loop() {
             planets[i].addGravityFrom(planets[j]);
         }
     }
-    var xmin = WIDTH, ymin = HEIGHT;
     for (var i=0; i<planets.length; i++) {
         planets[i].move();
         planets[i].draw();
-        if (planets[i].x < xmin)
-            xmin = planets[i].x;
-        if (planets[i].y < ymin)
-            ymin = planets[i].y;
     }
-    /*
-    xmin -= 60;
-    ymin -= 60;
-    var xmax = 0, ymax = 0;
-    for (var i=0; i<planets.length; i++) {
-        planets[i].x -= xmin;
-        planets[i].y -= ymin;
-        if (planets[i].x > xmax)
-            xmax = planets[i].x;
-        if (planets[i].y > ymax)
-            ymax = planets[i].y;
-    }
-    scale = ymax/HEIGHT;
-    if (xmax/WIDTH > scale)
-        scale = xmax/WIDTH;
-    */
     if (keep_running)
         setTimeout(loop, 10);
 }
