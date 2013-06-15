@@ -4,7 +4,7 @@ var WIDTH = 1200, HEIGHT = 600;
 var planets = [];
 var stopbutton, keep_running;
 var G = 20;
-var step = 10000;
+var STEP = 15;
 var MINDIST = 10;
 
 function Planet(x, y, dy, dx, m) {
@@ -23,13 +23,17 @@ function Planet(x, y, dy, dx, m) {
     this.move = function() {
         this.x += this.dx/STEP;
         this.y += this.dy/STEP;
+        if (this.x > WIDTH || this.x < 0)
+            this.dx *= -1;
+        if (this.y > HEIGHT || this.y < 0)
+            this.dy *= -1;
     }
     this.addGravityFrom = function(that) {
         var dist = Math.sqrt(Math.pow(that.x-this.x, 2) + Math.pow(that.y-this.y, 2));
         if (dist < MINDIST) return;
         var acc = G*that.m/Math.pow(dist, 2);
-        var cx = acc*Math.pow((that.x-this.x)/dist, 2);
-        var cy = acc*Math.pow((that.y-this.y)/dist, 2);
+        var cx = acc*Math.abs(that.x-this.x)/dist; // times sine of the angle.
+        var cy = acc*Math.abs(that.y-this.y)/dist; // times cosine of the angle.
 
         if (that.x < this.x)
             this.dx -= cx;
@@ -57,7 +61,7 @@ function loop() {
         planets[i].draw();
     }
     if (keep_running)
-        setTimeout(loop, 10);
+        setTimeout(loop, 5);
 }
 
 function run()
