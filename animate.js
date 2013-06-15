@@ -6,6 +6,7 @@ var stopbutton, keep_running;
 var G = 20;
 var STEP = 15;
 var MINDIST = 10;
+var WIND = 0.0001;
 
 function Planet(x, y, dy, dx, m) {
     this.x = x;
@@ -27,6 +28,9 @@ function Planet(x, y, dy, dx, m) {
             this.dx *= -1;
         if (this.y > HEIGHT || this.y < 0)
             this.dy *= -1;
+
+        this.dy -= WIND*this.dy;
+        this.dx -= WIND*this.dx;
     }
     this.addGravityFrom = function(that) {
         var dist = Math.sqrt(Math.pow(that.x-this.x, 2) + Math.pow(that.y-this.y, 2));
