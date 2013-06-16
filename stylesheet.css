@@ -1,0 +1,32 @@
+body {
+    background-color: black;
+}
+canvas {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    z-index: -1;
+}
+button {
+    border-radius: 5px;
+    padding: 6px 10px;
+    text-decoration: none;
+    border: 2px solid black;
+    display: inline-block;
+    background-color: #08f2e8;
+    margin: 10px 10px 10px 10px;
+}
+button:hover {
+    background-color: #3399cc;
+}
+button:active {
+    position: relative;
+    top: 1px;
+}
+div {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
